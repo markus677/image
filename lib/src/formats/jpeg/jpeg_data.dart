@@ -527,7 +527,7 @@ class JpegData {
     frame!.precision = block.readByte();
     frame!.scanLines = block.readUint16();
     frame!.samplesPerLine = block.readUint16();
-
+    return;
     final numComponents = block.readByte();
 
     for (var i = 0; i < numComponents; i++) {
