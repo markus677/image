@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 /// Provides information about the image being decoded.
 abstract class DecodeInfo {
   /// The width of the image canvas.
@@ -11,4 +13,7 @@ abstract class DecodeInfo {
 
   /// The number of frames that can be decoded.
   int get numFrames;
+
+  /// raw exif data for external decoding
+  List<Uint8List>? rawExifData;
 }

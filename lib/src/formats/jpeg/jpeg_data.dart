@@ -97,6 +97,11 @@ class JpegData {
           hasSOS = true;
           _skipBlock();
           break;
+        case Jpeg.M_APP1:
+          _readAppData(marker, _readBlock());
+          info.rawExifData = exif.rawData;
+          break;
+
         default:
           _skipBlock();
           break;
@@ -357,6 +362,7 @@ class JpegData {
         continue;
       }
 
+      // How does this work for string?
       final byteCount = bytesPerFormat[format];
 
       var offset = 0;
@@ -380,6 +386,9 @@ class JpegData {
 
     final rawData = block.toUint8List().sublist(0);
     exif.rawData!.add(rawData);
+
+    // onyl quickfix: only get raw data in readInfo() for decoding EXIF/XMP externally
+    return;
 
     const EXIF_TAG = 0x45786966; // Exif\0\0
     if (block.readUint32() != EXIF_TAG) {
