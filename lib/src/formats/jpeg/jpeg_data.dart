@@ -91,7 +91,7 @@ class JpegData {
         case Jpeg.M_SOF1: // SOF1 (Start of Frame, Extended DCT)
         case Jpeg.M_SOF2: // SOF2 (Start of Frame, Progressive DCT)
           hasSOF = true;
-          _readFrame(marker, _readBlock());
+          _readFrame(marker, _readBlock(), minimal: true);
           break;
         case Jpeg.M_SOS: // SOS (Start of Scan)
           hasSOS = true;
@@ -516,7 +516,7 @@ class JpegData {
     }
   }
 
-  void _readFrame(int marker, InputBuffer block) {
+  void _readFrame(int marker, InputBuffer block, {bool minimal = false}) {
     if (frame != null) {
       throw ImageException('Duplicate JPG frame data found.');
     }
@@ -527,7 +527,9 @@ class JpegData {
     frame!.precision = block.readByte();
     frame!.scanLines = block.readUint16();
     frame!.samplesPerLine = block.readUint16();
-    return;
+
+    if (minimal) return; // read only base data but not image
+
     final numComponents = block.readByte();
 
     for (var i = 0; i < numComponents; i++) {
